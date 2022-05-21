@@ -1,8 +1,9 @@
 import { createRoot } from 'react-dom/client'
 import 'tailwindcss/tailwind.css'
-import App from 'components/App'
+import { App } from './components/App'
 import '@fontsource/poppins'
 import '@fontsource/roboto'
+import './index.css'
 
 import { app } from 'services/firebase'
 

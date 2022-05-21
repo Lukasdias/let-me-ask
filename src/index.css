@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+@layer components {
+  .my-bg-gradient {
+    @apply bg-gradient-to-r from-[#485BFF] to-[#FF59F8];
+  }
+}
