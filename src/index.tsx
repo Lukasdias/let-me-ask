@@ -5,7 +5,7 @@ import '@fontsource/poppins'
 import '@fontsource/roboto'
 import './index.css'
 
-import { app } from 'services/firebase'
+// import { app } from 'services/firebase'
 
 const container = document.getElementById('root') as HTMLDivElement
 const root = createRoot(container)
