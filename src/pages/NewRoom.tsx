@@ -1,26 +1,14 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import ASIDE_IMG from './../public/illustration.svg'
+import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import LOGO from './../public/favicon.svg'
-import { GoogleLogo, SignIn } from 'phosphor-react'
-
+import { Aside } from '../components/HomeAside/index'
+import useStore from '../utils/userStore'
 function NewRoom() {
-  const navigate = useNavigate()
+  const { user } = useStore()
 
-  function handleReturnToMainPage() {
-    navigate('/', { replace: true })
-  }
   return (
     <div className="flex relative flex-col w-screen h-screen bg-white sm:flex-row sm:h-screen">
-      <aside className="flex flex-col flex-[7] gap-3 justify-center p-16 bg-my-purple">
-        <img src={ASIDE_IMG} alt="aside img" className="max-w-[315px] h-auto" />
-        <h1 className=" font-pop text-4xl font-bold leading-10 text-white">
-          Toda pergunta tem uma resposta.
-        </h1>
-        <span className="font-rob text-2xl leading-8 text-white">
-          Aprenda e compartilhe conhecimento com outras pessoas
-        </span>
-      </aside>
+      <Aside />
       <main className="flex flex-col gap-4 justify-center items-center py-16 sm:flex-[8] sm:p-0">
         <div className="flex relative flex-col gap-6 items-stretch max-w-[320px]">
           <img
@@ -47,13 +35,9 @@ function NewRoom() {
             </button>
             <p className="font-rob text-sm text-my-gray-medium">
               Quer entrar em uma sala já existente?{' '}
-              <a
-                href="#"
-                onClick={handleReturnToMainPage}
-                className="text-my-pink-dark underline"
-              >
+              <Link to="/" className="text-my-pink-dark underline">
                 Clique aqui
-              </a>
+              </Link>
             </p>
           </form>
         </div>

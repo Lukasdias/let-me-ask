@@ -14,10 +14,12 @@
     "@fontsource/roboto": "^4.5.7",
     "@headlessui/react": "^1.6.1",
     "firebase": "^9.8.1",
+    "framer-motion": "^6.3.3",
     "phosphor-react": "^1.4.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.3.0",
+    "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",
