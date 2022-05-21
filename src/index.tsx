@@ -1,6 +1,9 @@
 import { createRoot } from 'react-dom/client'
 import 'tailwindcss/tailwind.css'
 import App from 'components/App'
+import '@fontsource/poppins'
+import '@fontsource/roboto'
+
 import { app } from 'services/firebase'
 
 const container = document.getElementById('root') as HTMLDivElement

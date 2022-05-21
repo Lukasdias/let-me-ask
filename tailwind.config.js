@@ -6,7 +6,13 @@
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {}
+    extend: {
+      colors: {}
+    },
+    fontFamily: {
+      pop: '[Poppins, sans-serif]',
+      rob: '[Roboto, sans-serif]'
+    }
   },
   plugins: []
 }
