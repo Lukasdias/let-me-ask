@@ -7,6 +7,7 @@ import useStore from '../utils/userStore'
 import NewRoom from '../pages/NewRoom'
 import Home from '../pages/Home'
 import { Auth } from './Auth'
+import { Room } from '../pages/Room'
 
 export function App() {
   return (
@@ -14,7 +15,8 @@ export function App() {
       <BrowserRouter>
         <Auth>
           <Routes>
-            <Route path={`/rooms/new`} element={<NewRoom />} />
+            <Route path="/rooms/new" element={<NewRoom />} />
+            <Route path="/rooms/:id" element={<Room />} />
             <Route path="/" element={<Home />} />
           </Routes>
         </Auth>
