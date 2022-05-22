@@ -13,7 +13,7 @@ export function Button({ ...props }: ButtonProps) {
         <button
           disabled={props.disabled}
           type={props.type}
-          className="flex gap-3 justify-center items-center p-3 h-[50px] font-rob font-bold text-white  bg-my-purple hover:bg-my-hover-purple rounded-lg outline-none focus:ring-4 focus:ring-my-hover-purple focus:ring-offset-my-hover-purple 
+          className="flex gap-3 justify-center items-center py-4 px-8 h-[50px] font-rob font-bold text-white  bg-my-purple hover:bg-my-hover-purple rounded-lg outline-none focus:ring-4 focus:ring-my-hover-purple focus:ring-offset-my-hover-purple 
         disabled:opacity-50 transition duration-200 disabled:cursor-not-allowed"
           onClick={props.onClick}
         >

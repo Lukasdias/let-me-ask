@@ -30,7 +30,12 @@ function NewRoom() {
 
   return (
     <motion.div
+      initial={{
+        opacity: 0,
+        x: 1000
+      }}
       animate={{
+        x: [1000, 0],
         opacity: [0, 1]
       }}
       className="flex relative flex-col w-screen h-screen bg-white sm:flex-row sm:h-screen"

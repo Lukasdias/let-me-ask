@@ -11,7 +11,7 @@ import { Room } from '../pages/Room'
 
 export function App() {
   return (
-    <div className="flex relative w-screen h-screen">
+    <div className="flex overflow-hidden relative w-screen h-screen">
       <BrowserRouter>
         <Auth>
           <Routes>
