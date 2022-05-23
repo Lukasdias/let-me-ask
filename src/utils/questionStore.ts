@@ -36,7 +36,7 @@ interface IQuestionActions {
   likeQuestion: (question: Question, roomID: string) => Promise<void>
   removeQuestion: (question: Question, roomID: string) => Promise<void>
   setQuestions: (questions: Question[]) => void
-  fetchRoomQuestion: (roomID: string) => Promise<void>
+  fetchRoomQuestion: (roomID: string) => Promise<void | null>
 }
 
 const questionStore = create<IQuestionActions>((set, get) => ({
@@ -48,7 +48,7 @@ const questionStore = create<IQuestionActions>((set, get) => ({
         questions: newQuestions
       })
     } catch (error) {
-      console.log(error)
+      // console.log(error)
     }
   },
   removeQuestion: async (question, roomID) => {
@@ -57,7 +57,7 @@ const questionStore = create<IQuestionActions>((set, get) => ({
       const questionRef = ref(db, `rooms/${roomID}/questions/${question.id}`)
       await remove(questionRef)
     } catch (error) {
-      console.log(error)
+      // console.log(error)
     }
   },
   likeQuestion: async (question, roomID) => {
@@ -69,7 +69,7 @@ const questionStore = create<IQuestionActions>((set, get) => ({
         numOfLikes: question.numOfLikes + 1
       })
     } catch (error) {
-      console.log(error)
+      // console.log(error)
     }
   },
   fetchRoomQuestion: async (roomID) => {
@@ -94,7 +94,8 @@ const questionStore = create<IQuestionActions>((set, get) => ({
         get().setQuestions(parsedData)
       })
     } catch (error) {
-      console.log(error)
+      // console.log(error)
+      return null
     }
   }
 }))

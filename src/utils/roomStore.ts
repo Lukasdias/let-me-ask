@@ -32,7 +32,7 @@ const roomStore = create<IRoomActions>((set, get) => ({
       const roomRef = await dbGet(ref(db, `rooms/${roomCode}`))
       return roomRef
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       return null
     }
   },
@@ -44,7 +44,7 @@ const roomStore = create<IRoomActions>((set, get) => ({
       const firebaseRoom = await push(roomRef, room)
       return firebaseRoom
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       return null
     }
   },
@@ -56,7 +56,7 @@ const roomStore = create<IRoomActions>((set, get) => ({
       const removeResponse = await remove(ref(db, `rooms/${roomCode}`))
       return removeResponse
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       return null
     }
   }

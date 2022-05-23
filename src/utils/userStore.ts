@@ -31,7 +31,7 @@ const userStore = create<IUserActions>((set, get) => ({
         id: user.uid as string
       })
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       // ...
     }
   }
