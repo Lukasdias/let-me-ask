@@ -9,6 +9,7 @@ import {
   push,
   DatabaseReference
 } from 'firebase/database'
+import { database } from '../services/firebase'
 type RoomProps = {
   authorID: string
   questions: Question[]
@@ -26,7 +27,7 @@ const roomStore = create<IRoomActions>((set, get) => ({
   rooms: undefined,
   joinRoom: async (roomID) => {
     try {
-      const db = getDatabase()
+      const db = database
       const roomCode = roomID
       const roomRef = await dbGet(ref(db, `rooms/${roomCode}`))
       return roomRef
@@ -38,7 +39,7 @@ const roomStore = create<IRoomActions>((set, get) => ({
   createRoom: async (room) => {
     try {
       if (!room) return
-      const db = getDatabase()
+      const db = database
       const roomRef = ref(db, 'rooms')
       const firebaseRoom = await push(roomRef, room)
       return firebaseRoom
@@ -50,7 +51,7 @@ const roomStore = create<IRoomActions>((set, get) => ({
   deleteRoom: async (roomID) => {
     if (!roomID) return null
     try {
-      const db = getDatabase()
+      const db = database
       const roomCode = roomID
       const removeResponse = await remove(ref(db, `rooms/${roomCode}`))
       return removeResponse

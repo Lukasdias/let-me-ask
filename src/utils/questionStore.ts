@@ -3,6 +3,7 @@ import create from 'zustand'
 import { getDatabase, ref, onValue, remove } from 'firebase/database'
 import { get as dbGet } from 'firebase/database'
 import { set as dbSet } from 'firebase/database'
+import { database } from '../services/firebase'
 
 export type FirebaseQuestions = Record<string, IQuestionProps>
 
@@ -52,7 +53,7 @@ const questionStore = create<IQuestionActions>((set, get) => ({
   },
   removeQuestion: async (question, roomID) => {
     try {
-      const db = getDatabase()
+      const db = database
       const questionRef = ref(db, `rooms/${roomID}/questions/${question.id}`)
       await remove(questionRef)
     } catch (error) {
@@ -61,7 +62,7 @@ const questionStore = create<IQuestionActions>((set, get) => ({
   },
   likeQuestion: async (question, roomID) => {
     try {
-      const db = getDatabase()
+      const db = database
       const questionRef = ref(db, `rooms/${roomID}/questions/${question.id}`)
       await dbSet(questionRef, {
         ...question,
@@ -73,7 +74,7 @@ const questionStore = create<IQuestionActions>((set, get) => ({
   },
   fetchRoomQuestion: async (roomID) => {
     try {
-      const db = getDatabase()
+      const db = database
       const roomRef = ref(db, `rooms/${roomID}`)
       onValue(roomRef, (room) => {
         const dbRoom = room.val()

@@ -30,7 +30,6 @@ const userStore = create<IUserActions>((set, get) => ({
         avatar: user.photoURL as string,
         id: user.uid as string
       })
-      console.log(get().user)
     } catch (error) {
       console.log(error)
       // ...
