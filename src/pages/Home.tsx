@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useRef, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { GoogleLogo, SignIn } from 'phosphor-react'
 import { Aside } from '../components/HomeAside/index'
@@ -9,10 +9,20 @@ import { database } from '../services/firebase'
 import { Button } from '../components/Button/index'
 
 import LOGO from './../public/logo.svg'
-import useStore from '../utils/userStore'
+import userStore from '../utils/userStore'
+import roomStore from '../utils/roomStore'
+import toast from 'react-hot-toast'
+import { MyToast } from '../components/MyToast'
+import { Toaster } from 'react-hot-toast'
+
+const fail = () =>
+  toast.custom((t) => (
+    <MyToast visible={t.visible} type="fail" text="A sala não existe" />
+  ))
 
 function Home() {
-  const { user, signIn } = useStore()
+  const { user, signIn } = userStore()
+  const { joinRoom } = roomStore()
   const navigate = useNavigate()
   const inputRef = useRef<HTMLInputElement>(null)
   const [isLoadingRoom, setIsLoadingRoom] = useState(false)
@@ -21,7 +31,6 @@ function Home() {
     if (!user) {
       await signIn()
     }
-
     navigate(`/rooms/new`, { replace: true })
   }
 
@@ -32,18 +41,18 @@ function Home() {
 
     if (inputRef.current?.value.trim() === '') return
 
-    const roomCode = inputRef.current?.value
-    const roomRef = await get(ref(database, `rooms/${roomCode}`))
+    const roomID = inputRef.current?.value
+    const roomRef = await joinRoom(roomID as string)
 
-    if (!roomRef.exists()) {
-      alert('Room does not exists')
+    if (!roomRef?.exists()) {
+      fail()
       setIsLoadingRoom(false)
       return
     }
 
     setIsLoadingRoom(false)
-    navigate(`/rooms/${roomCode}`, { replace: true })
-    // navigate("")
+
+    navigate(`/rooms/${roomID}`, { replace: true })
   }
 
   return (
@@ -58,6 +67,7 @@ function Home() {
       }}
       className="flex relative flex-col w-screen h-screen bg-white sm:flex-row sm:h-screen"
     >
+      <Toaster toastOptions={{ duration: 1000 }} />
       <Aside />
       <main className="flex flex-col gap-4 justify-center items-center py-16 sm:flex-[8] sm:p-0">
         <div className="flex relative flex-col gap-4 items-stretch max-w-[320px]">

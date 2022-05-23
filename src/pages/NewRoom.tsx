@@ -1,16 +1,18 @@
 import React, { FormEvent, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ref, push } from 'firebase/database'
+import { ref, push, DatabaseReference } from 'firebase/database'
 import { Aside } from '../components/HomeAside/index'
 import { database } from '../services/firebase'
 import { Loading } from '../components/Loading'
 import { motion } from 'framer-motion'
-import LOGO from './../public/favicon.svg'
-import useStore from '../utils/userStore'
+import LOGO from './../public/logo.svg'
+import userStore from '../utils/userStore'
+import roomStore from '../utils/roomStore'
 
 function NewRoom() {
   const [isSendingRoom, setIsSendingRoom] = useState(false)
-  const { user } = useStore()
+  const { user } = userStore()
+  const { createRoom } = roomStore()
   const navigate = useNavigate()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -19,13 +21,18 @@ function NewRoom() {
 
     if (inputRef.current?.value.trim() === '') return
     setIsSendingRoom(true)
-    const roomRef = ref(database, 'rooms')
-    const firebaseRoom = await push(roomRef, {
-      title: inputRef.current?.value,
-      authorID: user?.id
+    const firebaseRoom = await createRoom({
+      title: inputRef.current?.value as string,
+      authorID: user?.id as string,
+      questions: []
     })
+    // const roomRef = ref(database, 'rooms')
+    // const firebaseRoom = await push(roomRef, {
+    //   title: inputRef.current?.value,
+    //   authorID: user?.id
+    // })
     setIsSendingRoom(false)
-    navigate(`/rooms/${firebaseRoom.key}`, { replace: true })
+    navigate(`/rooms/admin/${firebaseRoom?.key}`, { replace: true })
   }
 
   return (

@@ -1,13 +1,9 @@
-import React, { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { Spinner } from 'phosphor-react'
-import { GoogleAuthProvider, signInWithPopup, User } from 'firebase/auth'
-import { auth } from '../services/firebase'
-import useStore from '../utils/userStore'
-import NewRoom from '../pages/NewRoom'
-import Home from '../pages/Home'
 import { Auth } from './Auth'
 import { Room } from '../pages/Room'
+import NewRoom from '../pages/NewRoom'
+import Home from '../pages/Home'
+import { AdminRoom } from '../pages/AdminRoom'
 
 export function App() {
   return (
@@ -17,6 +13,7 @@ export function App() {
           <Routes>
             <Route path="/rooms/new" element={<NewRoom />} />
             <Route path="/rooms/:id" element={<Room />} />
+            <Route path="/rooms/admin/:id" element={<AdminRoom />} />
             <Route path="/" element={<Home />} />
           </Routes>
         </Auth>

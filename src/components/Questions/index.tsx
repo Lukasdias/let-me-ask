@@ -1,56 +1,41 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { NoQuestions } from './NoQuestions/index'
-import { Question } from './Question/index'
-import useStore from '../../utils/userStore'
-import { ref, get, child, onValue } from 'firebase/database'
+import { TemplateQuestion } from './TemplateQuestion/index'
+import userStore from '../../utils/userStore'
 import { RoomParams } from '../../utils/roomParams'
 import { useParams } from 'react-router-dom'
-import { getDatabase } from 'firebase/database'
-import {
-  QuestionProps,
-  FirebaseQuestions,
-  ParsedQuestionProps
-} from '../../utils/question'
+import questionStore from '../../utils/questionStore'
 
-export function Questions() {
-  const { user } = useStore()
-  const [questionsData, setQuestionsData] = useState<QuestionProps[]>([])
+type Props = {
+  isAdmin: boolean
+}
+
+export function Questions({ isAdmin }: Props) {
+  const { questions, fetchRoomQuestion } = questionStore()
   const params = useParams<RoomParams>()
   const roomID = params.id
-  // const dbRef = ref(database, `rooms/${roomID}/questions`)
 
   useEffect(() => {
-    async function getData() {
-      // const room = await get(
-      //   child(ref(getDatabase()), `rooms/${roomID}/questions`)
-      // )
-      onValue(ref(getDatabase(), `rooms/${roomID}/questions`), (room) => {
-        const databaseRoom = room.val()
-        console.log(databaseRoom)
-        const firebaseQuestions = databaseRoom.questions as FirebaseQuestions
-        const parsedQuestions = Object.entries(firebaseQuestions ?? {}).map(
-          ([key, value]) => {
-            return {
-              id: key,
-              content: value.content,
-              author: value.author,
-              isHighlighted: value.isHighlighted,
-              numOfLikes: value.numOfLikes,
-              isAnswered: value.isAnswered
-            }
-          }
-        )
-      })
-    }
-    getData()
-  }, [])
+    fetchRoomQuestion(`${roomID}`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomID])
+
   return (
     <>
-      {!questionsData ? (
-        <NoQuestions />
+      {questions.length === 0 ? (
+        <NoQuestions isAdmin={isAdmin} />
       ) : (
         <>
-          <div className="flex flex-col gap-3 items-stretch"></div>
+          <div className="flex flex-col gap-3 items-stretch">
+            {questions.map((q, idx: number) => (
+              <TemplateQuestion
+                isAdmin={isAdmin}
+                key={idx}
+                custom={idx}
+                question={q}
+              />
+            ))}
+          </div>
         </>
       )}
     </>

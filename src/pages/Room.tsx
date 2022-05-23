@@ -1,26 +1,28 @@
-import React, { FormEvent, useRef, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { RoomButton } from '../components/RoomButton/index'
 import { Button } from '../components/Button/index'
 import { Questions } from '../components/Questions/index'
 import { useParams } from 'react-router-dom'
-import useStore from '../utils/userStore'
-import Logo from './../public/logo.svg'
 import { push, ref } from 'firebase/database'
 import { database } from '../services/firebase'
 import { Loading } from '../components/Loading/index'
 import toast, { Toaster } from 'react-hot-toast'
 import { MyToast } from '../components/MyToast/index'
 import { RoomParams } from '../utils/roomParams'
-import { QuestionProps } from '../utils/question'
+import { SmileySad } from 'phosphor-react'
+import questionStore, { IQuestionProps } from '../utils/questionStore'
+import userStore from '../utils/userStore'
+import Logo from './../public/logo.svg'
 
 const success = () =>
   toast.custom((t) => <MyToast visible={t.visible} type="success" />)
 const fail = () =>
-  toast.custom((t) => <MyToast visible={t.visible} type="fail" />)
+  toast.custom((t) => <MyToast visible={t.visible} type="fail" text="Error" />)
 
 export function Room() {
-  const { user, signIn } = useStore()
+  const { user, signIn } = userStore()
+  const { questions, title } = questionStore()
   const [isSendingQuestion, setIsSendingQuestion] = useState(false)
   const questionTextAreaRef = useRef<HTMLTextAreaElement>(null)
   const params = useParams<RoomParams>()
@@ -32,7 +34,7 @@ export function Room() {
 
     if (!user) return fail()
 
-    const question: QuestionProps = {
+    const question: IQuestionProps = {
       numOfLikes: 0,
       content: questionTextAreaRef.current?.value as string,
       author: {
@@ -69,9 +71,6 @@ export function Room() {
             <RoomButton roomID={roomID as string} variant="copy-paste">
               {params.id}
             </RoomButton>
-            <RoomButton roomID={roomID as string} variant="delete-room">
-              Encerrar sala
-            </RoomButton>
           </div>
         </div>
       </header>
@@ -88,10 +87,16 @@ export function Room() {
       >
         <section className="flex flex-col gap-4 items-stretch w-full sm:w-[800px]">
           <div className="flex flex-col gap-4 sm:flex-row">
-            <h1 className="font-pop text-2xl font-bold text-center text-my-black sm:text-left">{`Sala React Q&A`}</h1>
-            <span className="flex justify-center items-center py-2 px-4 h-8 font-rob font-bold text-white bg-my-pink-dark rounded-3xl">
-              4 perguntas
-            </span>
+            <h1 className="font-pop text-2xl font-bold text-center text-my-black sm:text-left">{`Sala ${title}`}</h1>
+            {questions.length > 0 ? (
+              <span className="flex justify-center items-center py-2 px-4 h-8 font-rob font-bold text-white bg-my-pink-dark rounded-3xl">
+                {questions.length} pergunta{questions.length > 1 && 's'}
+              </span>
+            ) : (
+              <span className="flex gap-2 justify-center items-center py-2 px-4 h-8 font-rob font-bold text-white bg-my-black rounded-3xl">
+                Nenhuma pergunta <SmileySad weight="bold" className="w-6 h-6" />
+              </span>
+            )}
           </div>
           <form
             onSubmit={(event: FormEvent) => handleSendQuestion(event)}
@@ -141,7 +146,7 @@ export function Room() {
                 )}
               </Button>
             </div>
-            <Questions />
+            <Questions isAdmin={false} />
           </form>
         </section>
       </motion.main>

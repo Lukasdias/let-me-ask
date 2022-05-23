@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Copy } from 'phosphor-react'
 import { motion } from 'framer-motion'
 import toast, { Toaster } from 'react-hot-toast'

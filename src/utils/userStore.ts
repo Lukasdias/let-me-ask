@@ -3,21 +3,21 @@ import create from 'zustand'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { auth } from '../services/firebase'
 
-export interface UserProps {
+export interface IUserProps {
   name: string
   avatar: string
   id: string
 }
 
-interface UserActions {
-  user: UserProps | undefined
-  setUser: (newUser: UserProps) => void
+interface IUserActions {
+  user: IUserProps | undefined
+  setUser: (newUser: IUserProps) => void
   signIn: () => Promise<void>
 }
 
-const useStore = create<UserActions>((set, get) => ({
+const userStore = create<IUserActions>((set, get) => ({
   user: undefined,
-  setUser: (newUser: UserProps) => set({ user: newUser }),
+  setUser: (newUser: IUserProps) => set({ user: newUser }),
   signIn: async () => {
     try {
       const provider = new GoogleAuthProvider()
@@ -38,4 +38,4 @@ const useStore = create<UserActions>((set, get) => ({
   }
 }))
 
-export default useStore
+export default userStore

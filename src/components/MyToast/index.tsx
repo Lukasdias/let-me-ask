@@ -1,10 +1,9 @@
-import React from 'react'
 import { CheckCircle, WarningCircle, Copy } from 'phosphor-react'
 import { motion, Variants } from 'framer-motion'
 
 interface MyToastProps {
   visible: boolean
-  type: 'success' | 'fail' | 'waiting' | 'custom'
+  type: 'success' | 'fail' | 'waiting' | 'custom' | 'delete'
   text?: string
 }
 
@@ -52,7 +51,7 @@ export function MyToast({ type, visible, text }: MyToastProps) {
       }`}
         >
           <WarningCircle weight="bold" className="w-6 h-6" />
-          Error
+          {text}
         </motion.div>
       )
     case 'waiting':
@@ -67,6 +66,19 @@ export function MyToast({ type, visible, text }: MyToastProps) {
       }`}
         >
           <Copy weight="bold" className="w-6 h-6" />
+          {text}
+        </motion.div>
+      )
+    case 'delete':
+      return (
+        <motion.div
+          initial={'hidden'}
+          animate={visible ? 'visible' : 'hidden'}
+          variants={MyToastVariants}
+          className={`flex gap-3 justify-center items-center p-3 font-pop font-bold text-white bg-my-danger rounded-xl shadow-sm
+      }`}
+        >
+          <CheckCircle weight="bold" className="w-6 h-6" />
           {text}
         </motion.div>
       )

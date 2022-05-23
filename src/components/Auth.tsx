@@ -1,12 +1,12 @@
-import React, { ReactNode, useEffect } from 'react'
-import useStore from '../utils/userStore'
+import { ReactNode, useEffect } from 'react'
+import userStore from '../utils/userStore'
 import { auth } from '../services/firebase'
 
 type AuthProps = {
   children: ReactNode
 }
 export function Auth(props: AuthProps) {
-  const { user, setUser } = useStore()
+  const { user, setUser } = userStore()
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {

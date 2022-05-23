@@ -2,10 +2,14 @@ import { motion } from 'framer-motion'
 import React from 'react'
 import BalloonIMG from './../../../public/empty-questions.svg'
 
-export function NoQuestions() {
+type Props = {
+  isAdmin: boolean
+}
+
+export function NoQuestions({ isAdmin }: Props) {
   return (
     <motion.div
-      className="flex flex-col gap-2 items-stretch mx-auto w-full sm:w-[284px]"
+      className="flex flex-col gap-2 items-stretch mx-auto mt-4 w-full sm:w-[284px]"
       initial={{ opacity: 0 }}
       animate={{
         opacity: [0, 1],
