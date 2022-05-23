@@ -78,6 +78,7 @@ const questionStore = create<IQuestionActions>((set, get) => ({
       const roomRef = ref(db, `rooms/${roomID}`)
       onValue(roomRef, (room) => {
         const dbRoom = room.val()
+        if (!dbRoom) return
         const firebaseQuestions: FirebaseQuestions = dbRoom.questions ?? {}
         const parsedData =
           Object.entries(firebaseQuestions).map(([key, value]) => {

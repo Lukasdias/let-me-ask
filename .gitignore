@@ -8,6 +8,7 @@ dist-ssr
 .pnp.js
 
 .firebase
+.firebase_rules.json
 
 # testing
 /coverage
