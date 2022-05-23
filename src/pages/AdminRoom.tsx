@@ -85,9 +85,9 @@ export function AdminRoom() {
           <section className="flex flex-col gap-4 items-stretch w-full sm:w-[800px]">
             <div className="flex flex-col gap-4 sm:flex-row">
               <h1 className="font-pop text-2xl font-bold text-center text-my-black sm:text-left">{`Sala ${title}`}</h1>
-              {questions.length > 0 ? (
+              {questions!.length > 0 ? (
                 <span className="flex justify-center items-center py-2 px-4 h-8 font-rob font-bold text-white bg-my-pink-dark rounded-3xl">
-                  {questions.length} pergunta{questions.length > 1 && 's'}
+                  {questions!.length} pergunta{questions!.length > 1 && 's'}
                 </span>
               ) : (
                 <span className="flex gap-2 justify-center items-center py-2 px-4 h-8 font-rob font-bold text-white bg-my-black rounded-3xl">
