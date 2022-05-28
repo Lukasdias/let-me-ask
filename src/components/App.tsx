@@ -7,7 +7,7 @@ import { AdminRoom } from '../pages/AdminRoom'
 
 export function App() {
   return (
-    <div className="flex overflow-hidden relative w-screen h-screen">
+    <div className="flex overflow-x-hidden overflow-y-auto relative w-screen h-screen sm:overflow-y-hidden">
       <BrowserRouter>
         <Auth>
           <Routes>
