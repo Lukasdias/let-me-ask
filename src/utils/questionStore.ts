@@ -1,10 +1,12 @@
 import React from 'react'
 import create from 'zustand'
-import { getDatabase, ref, onValue, remove } from 'firebase/database'
+import { getDatabase, ref, onValue, remove, push, off } from 'firebase/database'
 import { get as dbGet } from 'firebase/database'
 import { set as dbSet } from 'firebase/database'
 import { database } from '../services/firebase'
-
+import { IUserProps } from './userStore'
+import { persist } from 'zustand/middleware'
+import userStore from './userStore'
 export type FirebaseQuestions = Record<string, IQuestionProps>
 
 export interface IQuestionProps {
@@ -13,7 +15,12 @@ export interface IQuestionProps {
     name: string
     avatar: string
   }
-  numOfLikes: number
+  likes: Record<
+    string,
+    {
+      authorId: string
+    }
+  >
   isHighlighted: false
   isAnswered: false
 }
@@ -25,7 +32,8 @@ export type Question = {
     name: string
     avatar: string
   }
-  numOfLikes: number
+  likesCount: number
+  likeId: string | undefined
   isHighlighted: false
   isAnswered: false
 }
@@ -33,10 +41,18 @@ export type Question = {
 interface IQuestionActions {
   title: string
   questions: Question[]
-  likeQuestion: (question: Question, roomID: string) => Promise<void>
+  likeQuestion: (
+    question: Question,
+    roomID: string,
+    user: IUserProps | undefined,
+    likeId: string | undefined
+  ) => Promise<void>
   removeQuestion: (question: Question, roomID: string) => Promise<void>
   setQuestions: (questions: Question[]) => void
-  fetchRoomQuestion: (roomID: string) => Promise<void | null>
+  fetchRoomQuestion: (
+    roomID: string,
+    user: IUserProps | undefined
+  ) => Promise<void | null>
 }
 
 const questionStore = create<IQuestionActions>((set, get) => ({
@@ -48,7 +64,7 @@ const questionStore = create<IQuestionActions>((set, get) => ({
         questions: newQuestions
       })
     } catch (error) {
-      // console.log(error)
+      console.log(error)
     }
   },
   removeQuestion: async (question, roomID) => {
@@ -57,22 +73,31 @@ const questionStore = create<IQuestionActions>((set, get) => ({
       const questionRef = ref(db, `rooms/${roomID}/questions/${question.id}`)
       await remove(questionRef)
     } catch (error) {
-      // console.log(error)
+      console.log(error)
     }
   },
-  likeQuestion: async (question, roomID) => {
+  likeQuestion: async (question, roomID, user, likeId) => {
     try {
-      const db = database
-      const questionRef = ref(db, `rooms/${roomID}/questions/${question.id}`)
-      await dbSet(questionRef, {
-        ...question,
-        numOfLikes: question.numOfLikes + 1
-      })
+      if (likeId) {
+        const likeRef = ref(
+          database,
+          `rooms/${roomID}/questions/${question.id}/likes/${likeId}`
+        )
+        await remove(likeRef)
+      } else {
+        const likeRef = ref(
+          database,
+          `rooms/${roomID}/questions/${question.id}/likes`
+        )
+        await push(likeRef, {
+          authorId: user?.id
+        })
+      }
     } catch (error) {
-      // console.log(error)
+      console.log(error)
     }
   },
-  fetchRoomQuestion: async (roomID) => {
+  fetchRoomQuestion: async (roomID, user) => {
     try {
       const db = database
       const roomRef = ref(db, `rooms/${roomID}`)
@@ -87,15 +112,18 @@ const questionStore = create<IQuestionActions>((set, get) => ({
               content: value.content,
               author: value.author,
               isAnswered: value.isAnswered,
-              numOfLikes: value.numOfLikes,
-              isHighlighted: value.isHighlighted
+              isHighlighted: value.isHighlighted,
+              likesCount: Object.values(value.likes ?? {}).length,
+              likeId: ''
             }
           }) ?? {}
         get().title = dbRoom.title
+        console.log(parsedData)
         get().setQuestions(parsedData)
       })
+      // return off(roomRef, 'value')
     } catch (error) {
-      // console.log(error)
+      console.log(error)
       return null
     }
   }

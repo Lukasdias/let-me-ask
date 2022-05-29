@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { RoomButton } from '../components/RoomButton/index'
 import { Button } from '../components/Button/index'
 import { Questions } from '../components/Questions/index'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { push, ref } from 'firebase/database'
 import { database } from '../services/firebase'
 import { Loading } from '../components/Loading/index'
@@ -17,12 +17,14 @@ import Logo from './../public/logo.svg'
 import roomStore from '../utils/roomStore'
 import { modalStore } from '../components/Modal'
 import { Modal } from '../components/Modal/index'
+
 const success = () =>
   toast.custom((t) => <MyToast visible={t.visible} type="success" />)
 const fail = () =>
   toast.custom((t) => <MyToast visible={t.visible} type="fail" />)
 
 export function AdminRoom() {
+  const navigate = useNavigate()
   const { toggle } = modalStore()
   const { user, signIn } = userStore()
   const { questions, title } = questionStore()
@@ -32,6 +34,10 @@ export function AdminRoom() {
 
   function handleDeleteRoom() {
     toggle()
+  }
+
+  function handleReturnToHome() {
+    navigate('/', { replace: true })
   }
 
   return (
@@ -55,7 +61,8 @@ export function AdminRoom() {
             <img
               src={Logo}
               alt="Let me ask logo"
-              className="w-[100px] h-auto"
+              className="w-[100px] h-auto cursor-pointer"
+              onClick={handleReturnToHome}
             />
             <div className="flex gap-2">
               <RoomButton roomID={roomID as string} variant="copy-paste">

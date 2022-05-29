@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import { RoomParams } from '../../../utils/roomParams'
 import { Toaster, toast } from 'react-hot-toast'
 import { MyToast } from '../../MyToast'
+import userStore from '../../../utils/userStore'
 
 interface Props extends MotionProps {
   isAdmin: boolean
@@ -29,12 +30,13 @@ const deleted = () =>
   ))
 
 export function TemplateQuestion({ ...props }: Props) {
+  const { user } = userStore()
   const params = useParams<RoomParams>()
   const roomID = params.id
   const { likeQuestion, removeQuestion } = questionStore()
 
   function handleLikeQuestion() {
-    likeQuestion(props.question, `${roomID}`)
+    likeQuestion(props.question, `${roomID}`, user, props.question.likeId)
   }
 
   function handleRemoveQuestion() {
@@ -69,15 +71,24 @@ export function TemplateQuestion({ ...props }: Props) {
               {props.question.author.name}
             </span>
           </div>
-          <div className="flex gap-4 items-center">
-            <span className="flex items-center font-pop font-bold text-my-gray-dark">
-              {props.question.numOfLikes}
-            </span>
+          {/* <div className="flex gap-4 items-center">
+            {props.question.likesCount > 0 && (
+              <span
+                className={`flex items-center font-pop font-bold ${
+                  props.question.likeId ? 'text-my-purple' : 'text-my-gray-dark'
+                }`}
+              >
+                {props.question.likesCount}
+              </span>
+            )}
+
             <button type="button" className="group">
               <ThumbsUp
                 onClick={handleLikeQuestion}
                 weight="regular"
-                className="w-6 h-6 text-my-gray-dark group-hover:text-my-hover-purple group-focus:text-my-hover-purple transition duration-200"
+                className={`w-6 h-6 ${
+                  props.question.likeId ? 'text-my-purple' : 'text-my-gray-dark'
+                } group-hover:text-my-hover-purple group-focus:text-my-hover-purple transition duration-200 `}
               />
             </button>
             {props.isAdmin && (
@@ -89,7 +100,7 @@ export function TemplateQuestion({ ...props }: Props) {
                 />
               </button>
             )}
-          </div>
+          </div> */}
         </div>
       </motion.div>
     </>

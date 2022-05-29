@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { RoomButton } from '../components/RoomButton/index'
 import { Button } from '../components/Button/index'
 import { Questions } from '../components/Questions/index'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { push, ref } from 'firebase/database'
 import { database } from '../services/firebase'
 import { Loading } from '../components/Loading/index'
@@ -21,6 +21,7 @@ const fail = () =>
   toast.custom((t) => <MyToast visible={t.visible} type="fail" text="Error" />)
 
 export function Room() {
+  const navigate = useNavigate()
   const { user, signIn } = userStore()
   const { questions, title } = questionStore()
   const [isSendingQuestion, setIsSendingQuestion] = useState(false)
@@ -35,12 +36,12 @@ export function Room() {
     if (!user) return fail()
 
     const question: IQuestionProps = {
-      numOfLikes: 0,
       content: questionTextAreaRef.current?.value as string,
       author: {
         name: user.name,
         avatar: user.avatar
       },
+      likes: {},
       isHighlighted: false,
       isAnswered: false
     }
@@ -48,6 +49,10 @@ export function Room() {
     await push(ref(database, `rooms/${roomID}/questions`), question)
     success()
     setIsSendingQuestion(false)
+  }
+
+  function handleReturnToHome() {
+    navigate('/', { replace: true })
   }
 
   return (
@@ -66,7 +71,12 @@ export function Room() {
       />
       <header className="flex gap-2 justify-center px-10 pt-12 pb-4 w-full h-auto border-b-2 border-b-my-gray-light sm:px-[100px]">
         <div className="flex flex-col gap-3 justify-between items-center w-full max-w-[1120px] sm:flex-row">
-          <img src={Logo} alt="Let me ask logo" className="w-[100px] h-auto" />
+          <img
+            src={Logo}
+            alt="Let me ask logo"
+            className="w-[100px] h-auto cursor-pointer"
+            onClick={handleReturnToHome}
+          />
           <div className="flex gap-2">
             <RoomButton roomID={roomID as string} variant="copy-paste">
               {params.id}
